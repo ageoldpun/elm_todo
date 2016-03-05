@@ -1,6 +1,10 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
+model : List String
+model =
+  [ "walk the dogs", "kill rats", "drop a deuce" ]
+
 main : Html
 main =
   section [ class "todoapp" ]
@@ -16,13 +20,13 @@ main =
       , label [ for "toggle-all" ]
         [ text "Mark all as complete" ]
       , ul [ class "todo-list" ]
-        (todoItems [ "walk the dogs", "kill rats", "drop a deuce" ])
+        (todoItems model)
       ]
     , footer [ class "footer", attribute "style" "display: block;" ]
       [ span [ class "todo-count" ]
         [ strong []
-          [ text "3" ]
-        , text "items left"
+          [ text (toString (List.length model)) ]
+        , text " items left"
         ]
       , ul [ class "filters" ]
         [ li []
