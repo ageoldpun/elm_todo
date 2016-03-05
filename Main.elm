@@ -1,7 +1,7 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-
+main : Html
 main =
   section [ class "todoapp" ]
     [ header [ class "header" ]
@@ -16,55 +16,7 @@ main =
       , label [ for "toggle-all" ]
         [ text "Mark all as complete" ]
       , ul [ class "todo-list" ]
-        [ li [ class "completed" ]
-          [ div [ class "view" ]
-            [ input [ checked False, class "toggle", type' "checkbox" ]
-              []
-            , label []
-              [ text "Walk the dogs" ]
-            , button [ class "destroy" ]
-              []
-            ]
-          , input [ class "edit", value "Walk the dogs" ]
-            []
-          ]
-        , li []
-          [ div [ class "view" ]
-            [ input [ class "toggle", type' "checkbox" ]
-              []
-            , label []
-              [ text "kill rats" ]
-            , button [ class "destroy" ]
-              []
-            ]
-          , input [ class "edit", value "kill rats" ]
-            []
-          ]
-        , li []
-          [ div [ class "view" ]
-            [ input [ class "toggle", type' "checkbox" ]
-              []
-            , label []
-              [ text "laundry" ]
-            , button [ class "destroy" ]
-              []
-            ]
-          , input [ class "edit", value "laundry" ]
-            []
-          ]
-        , li []
-          [ div [ class "view" ]
-            [ input [ class "toggle", type' "checkbox" ]
-              []
-            , label []
-              [ text "new leg for suby" ]
-            , button [ class "destroy" ]
-              []
-            ]
-          , input [ class "edit", value "new leg for suby" ]
-            []
-          ]
-        ]
+        (todoItems [ "walk the dogs", "kill rats", "drop a deuce" ])
       ]
     , footer [ class "footer", attribute "style" "display: block;" ]
       [ span [ class "todo-count" ]
@@ -90,3 +42,22 @@ main =
         [ text "Clear completed" ]
       ]
     ]
+
+taskView : String -> Html
+taskView task =
+  li [ class "completed" ]
+    [ div [ class "view" ]
+      [ input [ checked False, class "toggle", type' "checkbox" ]
+        []
+      , label []
+        [ text task ]
+      , button [ class "destroy" ]
+        []
+      ]
+    , input [ class "edit", value task ]
+      []
+    ]
+
+todoItems : List String -> List Html
+todoItems tasks =
+  List.map taskView tasks
