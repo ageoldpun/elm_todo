@@ -1,12 +1,18 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import StartApp.Simple as StartApp
+
+main =
+  StartApp.start { model = model, view = view, update = update }
+
+update action model =
+  model
 
 model : List String
 model =
   [ "walk the dogs", "kill rats", "drop a deuce" ]
 
-main : Html
-main =
+view address model =
   section [ class "todoapp" ]
     [ header [ class "header" ]
       [ h1 []
