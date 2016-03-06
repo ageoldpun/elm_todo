@@ -1,39 +1,12 @@
+module View (view) where
+
 import Array exposing (toList, fromList)
-import Char exposing (fromCode)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import StartApp.Simple as StartApp
 
-main =
-  StartApp.start { model = model, view = view, update = update }
-
-type Action = Noop | UpdateNewTask String | SaveNewTask | Delete Int
-
-type alias Model = { newTask : String, tasks : List String }
-
-update : Action -> Model -> Model
-update action model =
-  case action of
-    Noop ->
-      model
-
-    UpdateNewTask task ->
-      { model | newTask = task }
-
-    SaveNewTask ->
-      { model | tasks = model.tasks ++ [ model.newTask ], newTask = "" }
-
-    Delete index ->
-      { model | tasks = removeIndex index model.tasks }
-
-removeIndex : Int -> List a -> List a
-removeIndex index list =
-  (List.take index list) ++ (List.drop (index+1) list)
-
-model : Model
-model =
-  { newTask = "", tasks = [] }
+import Model exposing (..)
+import Update exposing (..)
 
 view : Signal.Address Action -> Model -> Html
 view address model =
