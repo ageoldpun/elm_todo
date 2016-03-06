@@ -5,7 +5,7 @@ import Char exposing (fromCode)
 
 import Model exposing (..)
 
-update : Action -> Model.Model -> Model.Model
+update : Action -> Model -> Model
 update action model =
   case action of
     Noop ->
