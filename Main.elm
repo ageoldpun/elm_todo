@@ -11,15 +11,8 @@ type Action = Add | Delete String
 update action model =
   case action of
     Add -> model ++ [""]
-    Delete task -> removeTask model task
-
-matchString : String -> String -> Bool
-matchString a b =
-  a /= b
-
-removeTask : List String -> String -> List String
-removeTask tasks task =
-  List.filter (matchString task) tasks
+    Delete taskToRemove ->
+      List.filter (\task -> taskToRemove /= task) model
 
 model : List String
 model =
