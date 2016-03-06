@@ -8,13 +8,22 @@ import StartApp.Simple as StartApp
 main =
   StartApp.start { model = model, view = view, update = update }
 
-type Action = UpdateNewTask String | Delete Int
+type Action = Noop | UpdateNewTask String | SaveNewTask | Delete Int
+
 type alias Model = { newTask : String, tasks : List String }
 
 update : Action -> Model -> Model
 update action model =
   case action of
-    UpdateNewTask task -> { model | newTask = task }
+    Noop ->
+      model
+
+    UpdateNewTask task ->
+      { model | newTask = task }
+
+    SaveNewTask ->
+      { model | tasks = model.tasks ++ [ model.newTask ], newTask = "" }
+
     Delete index ->
       { model | tasks = removeIndex index model.tasks }
 
@@ -26,6 +35,7 @@ model : Model
 model =
   { newTask = "", tasks = [] }
 
+view : Signal.Address Action -> Model -> Html
 view address model =
   section [ class "todoapp" ]
     [ header [ class "header" ]
@@ -33,6 +43,7 @@ view address model =
         [ text "todos" ]
       , input
         [ on "input" targetValue (\value -> Signal.message address (UpdateNewTask value))
+        , onKeyPress address (\keyCode -> if keyCode == 13 then SaveNewTask else Noop)
         , class "new-todo"
         , placeholder "What needs to be done?" ]
         []
@@ -70,6 +81,7 @@ view address model =
       ]
     ]
 
+taskView : Signal.Address Action -> Int -> String -> Html
 taskView address index task =
   li []
     [ div [ class "view" ]
@@ -84,5 +96,6 @@ taskView address index task =
       []
     ]
 
+todoItems : Signal.Address Action -> List String -> List Html
 todoItems address tasks =
   List.indexedMap (taskView address) tasks
