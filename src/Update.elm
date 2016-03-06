@@ -1,8 +1,5 @@
 module Update (update) where
 
-import Array exposing (toList, fromList)
-import Char exposing (fromCode)
-
 import Model exposing (..)
 
 update : Action -> Model -> Model
