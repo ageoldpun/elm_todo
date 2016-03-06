@@ -1,3 +1,4 @@
+import Array exposing (toList, fromList)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -6,13 +7,17 @@ import StartApp.Simple as StartApp
 main =
   StartApp.start { model = model, view = view, update = update }
 
-type Action = Add | Delete String
+type Action = Add | Delete Int
 
 update action model =
   case action of
     Add -> model ++ [""]
-    Delete taskToRemove ->
-      List.filter (\task -> taskToRemove /= task) model
+    Delete index ->
+      removeIndex index model
+
+removeIndex : Int -> List a -> List a
+removeIndex index list =
+  (List.take index list) ++ (List.drop (index+1) list)
 
 model : List String
 model =
@@ -61,14 +66,14 @@ view address model =
       ]
     ]
 
-taskView address task =
+taskView address index task =
   li []
     [ div [ class "view" ]
       [ input [ checked False, class "toggle", type' "checkbox" ]
         []
       , label []
         [ text task ]
-      , button [ onClick address (Delete task), class "destroy" ]
+      , button [ onClick address (Delete index), class "destroy" ]
         []
       ]
     , input [ class "edit", value task ]
@@ -76,4 +81,4 @@ taskView address task =
     ]
 
 todoItems address tasks =
-  List.map (taskView address) tasks
+  List.indexedMap (taskView address) tasks
