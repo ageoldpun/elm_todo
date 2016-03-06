@@ -1,29 +1,35 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import StartApp.Simple as StartApp
 
 main =
   StartApp.start { model = model, view = view, update = update }
 
+type Action = Add
+
 update action model =
-  model
+  case action of
+    Add -> model ++ [""]
 
 model : List String
 model =
-  [ "walk the dogs", "kill rats", "drop a deuce" ]
+  []
 
 view address model =
   section [ class "todoapp" ]
     [ header [ class "header" ]
       [ h1 []
         [ text "todos" ]
-      , input [ class "new-todo", placeholder "What needs to be done?" ]
-        []
+      --, input [ class "new-todo", placeholder "What needs to be done?" ]
+      --  []
+      , button [ onClick address Add ]
+        [ text "Add" ]
       ]
     , section [ class "main", attribute "style" "display: block;" ]
-      [ input [ class "toggle-all", id "toggle-all", type' "checkbox" ]
-        []
-      , label [ for "toggle-all" ]
+      --[ input [ class "toggle-all", id "toggle-all", type' "checkbox" ]
+      --  []
+      [ label [ for "toggle-all" ]
         [ text "Mark all as complete" ]
       , ul [ class "todo-list" ]
         (todoItems model)
