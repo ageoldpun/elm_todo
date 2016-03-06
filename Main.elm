@@ -2,19 +2,19 @@ import Array exposing (toList, fromList)
 import Char exposing (fromCode)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onKeyPress)
+import Html.Events exposing (..)
 import StartApp.Simple as StartApp
 
 main =
   StartApp.start { model = model, view = view, update = update }
 
-type Action = UpdateNewTask Char | Delete Int
+type Action = UpdateNewTask String | Delete Int
 type alias Model = { newTask : String, tasks : List String }
 
 update : Action -> Model -> Model
 update action model =
   case action of
-    UpdateNewTask character -> { model | newTask = model.newTask ++ (toString character) }
+    UpdateNewTask task -> { model | newTask = task }
     Delete index ->
       { model | tasks = removeIndex index model.tasks }
 
@@ -26,16 +26,15 @@ model : Model
 model =
   { newTask = "", tasks = [] }
 
-keypressHandler : Int -> Action
-keypressHandler keyCode =
-  UpdateNewTask (Char.fromCode keyCode)
-
 view address model =
   section [ class "todoapp" ]
     [ header [ class "header" ]
       [ h1 []
         [ text "todos" ]
-      , input [ onKeyPress address keypressHandler, class "new-todo", placeholder "What needs to be done?" ]
+      , input
+        [ on "input" targetValue (\value -> Signal.message address (UpdateNewTask value))
+        , class "new-todo"
+        , placeholder "What needs to be done?" ]
         []
       ]
     , section [ class "main", attribute "style" "display: block;" ]
