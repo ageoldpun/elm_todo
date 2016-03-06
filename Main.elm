@@ -6,11 +6,20 @@ import StartApp.Simple as StartApp
 main =
   StartApp.start { model = model, view = view, update = update }
 
-type Action = Add
+type Action = Add | Delete String
 
 update action model =
   case action of
     Add -> model ++ [""]
+    Delete task -> removeTask model task
+
+matchString : String -> String -> Bool
+matchString a b =
+  a /= b
+
+removeTask : List String -> String -> List String
+removeTask tasks task =
+  List.filter (matchString task) tasks
 
 model : List String
 model =
@@ -32,7 +41,7 @@ view address model =
       [ label [ for "toggle-all" ]
         [ text "Mark all as complete" ]
       , ul [ class "todo-list" ]
-        (todoItems model)
+        (todoItems address model)
       ]
     , footer [ class "footer", attribute "style" "display: block;" ]
       [ span [ class "todo-count" ]
@@ -59,21 +68,19 @@ view address model =
       ]
     ]
 
-taskView : String -> Html
-taskView task =
-  li [ class "completed" ]
+taskView address task =
+  li []
     [ div [ class "view" ]
       [ input [ checked False, class "toggle", type' "checkbox" ]
         []
       , label []
         [ text task ]
-      , button [ class "destroy" ]
+      , button [ onClick address (Delete task), class "destroy" ]
         []
       ]
     , input [ class "edit", value task ]
       []
     ]
 
-todoItems : List String -> List Html
-todoItems tasks =
-  List.map taskView tasks
+todoItems address tasks =
+  List.map (taskView address) tasks
