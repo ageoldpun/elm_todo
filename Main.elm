@@ -44,6 +44,7 @@ view address model =
       , input
         [ on "input" targetValue (\value -> Signal.message address (UpdateNewTask value))
         , onKeyPress address (\keyCode -> if keyCode == 13 then SaveNewTask else Noop)
+        , value model.newTask
         , class "new-todo"
         , placeholder "What needs to be done?" ]
         []
