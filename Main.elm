@@ -1,50 +1,55 @@
 import Array exposing (toList, fromList)
+import Char exposing (fromCode)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onKeyPress)
 import StartApp.Simple as StartApp
 
 main =
   StartApp.start { model = model, view = view, update = update }
 
-type Action = Add | Delete Int
+type Action = UpdateNewTask Char | Delete Int
+type alias Model = { newTask : String, tasks : List String }
 
+update : Action -> Model -> Model
 update action model =
   case action of
-    Add -> model ++ [""]
+    UpdateNewTask character -> { model | newTask = model.newTask ++ (toString character) }
     Delete index ->
-      removeIndex index model
+      { model | tasks = removeIndex index model.tasks }
 
 removeIndex : Int -> List a -> List a
 removeIndex index list =
   (List.take index list) ++ (List.drop (index+1) list)
 
-model : List String
+model : Model
 model =
-  []
+  { newTask = "", tasks = [] }
+
+keypressHandler : Int -> Action
+keypressHandler keyCode =
+  UpdateNewTask (Char.fromCode keyCode)
 
 view address model =
   section [ class "todoapp" ]
     [ header [ class "header" ]
       [ h1 []
         [ text "todos" ]
-      --, input [ class "new-todo", placeholder "What needs to be done?" ]
-      --  []
-      , button [ onClick address Add ]
-        [ text "Add" ]
+      , input [ onKeyPress address keypressHandler, class "new-todo", placeholder "What needs to be done?" ]
+        []
       ]
     , section [ class "main", attribute "style" "display: block;" ]
-      --[ input [ class "toggle-all", id "toggle-all", type' "checkbox" ]
-      --  []
-      [ label [ for "toggle-all" ]
+      [ input [ class "toggle-all", id "toggle-all", type' "checkbox" ]
+        []
+      , label [ for "toggle-all" ]
         [ text "Mark all as complete" ]
       , ul [ class "todo-list" ]
-        (todoItems address model)
+        (todoItems address model.tasks)
       ]
     , footer [ class "footer", attribute "style" "display: block;" ]
       [ span [ class "todo-count" ]
         [ strong []
-          [ text (toString (List.length model)) ]
+          [ text (toString (List.length model.tasks)) ]
         , text " items left"
         ]
       , ul [ class "filters" ]
