@@ -1,12 +1,10 @@
 module View (view) where
 
-import Array exposing (toList, fromList)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import Model exposing (..)
-import Update exposing (..)
 
 view : Signal.Address Action -> Model -> Html
 view address model =
